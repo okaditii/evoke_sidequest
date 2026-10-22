@@ -214,3 +214,15 @@ export const seg = style({
 export const twoCol = style({ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", "@media": { "screen and (max-width: 560px)": { gridTemplateColumns: "1fr" } } });
 export const preview = style({ position: "sticky", top: "100px", display: "grid", gap: "0.9rem", justifyItems: "center", "@media": { [tablet]: { position: "static" } } });
 export const previewCard = style({ width: "100%", maxWidth: "300px" });
+
+/** "Minted ×n" badge on collection cards. */
+export const pulled = style({
+  display: "inline-block",
+  padding: "3px 10px",
+  borderRadius: vars.radius.pill,
+  background: "rgba(10, 10, 18, 0.8)",
+  border: `1px solid ${vars.color.teal}`,
+  color: vars.color.teal,
+  fontSize: "11px",
+  fontWeight: 600,
+});
