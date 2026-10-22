@@ -1,6 +1,6 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { useMemo, useState, type ReactNode } from "react";
-import { CHARACTER_PHOTOS, type Game } from "../data/catalog";
+import type { Game, Photo } from "../data/catalog";
 import { portraitSvg, svgDataUrl } from "../lib/cardArt";
 import { TIER_LABEL, TIER_RANK, type Tier } from "../lib/metadata";
 import { frameGradient, TIER_LOOK } from "../lib/tiers";
@@ -16,8 +16,12 @@ export interface GamingCardProps {
   genre?: string;
   /** Seeds the generated portrait; the same seed always draws the same art. */
   seed: string;
-  /** Official art URL shown over the generated portrait (falls back to it if the image fails). */
-  photo?: string;
+  /** Character photo shown over the generated backdrop (falls back to the drawn portrait if it fails). */
+  photo?: Photo;
+  /** Our own game banner, whose logo plate is shown as the card's game logo. */
+  logo?: string;
+  /** Game name, used as a text logo when there's no banner. */
+  gameName?: string;
   power: number;
   /** Small text bottom-right, e.g. the quest name. */
   footer?: string;
@@ -34,7 +38,8 @@ export function GamingCard(p: GamingCardProps) {
   const [photoFailed, setPhotoFailed] = useState(false);
   const look = TIER_LOOK[p.tier];
   const rank = TIER_RANK[p.tier];
-  const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, rank)), [p.seed, p.genre, rank]);
+  const showPhoto = !!p.photo && !photoFailed;
+  const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, rank, showPhoto)), [p.seed, p.genre, rank, showPhoto]);
   const style = assignInlineVars({ [s.frameVar]: frameGradient(p.tier), [s.glowVar]: look.glow, [s.inkVar]: look.ink });
   const label = p.label ?? `${p.character}, ${TIER_LABEL[p.tier]} card`;
 
@@ -43,8 +48,19 @@ export function GamingCard(p: GamingCardProps) {
       <div className={`${s.frame} ${p.tier === "ultra" ? s.frameUltra : ""}`}>
         <div className={s.face}>
           <img className={s.art} src={art} alt="" decoding="async" />
-          {p.photo && !photoFailed && (
-            <img className={s.photo} src={p.photo} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
+          {showPhoto && p.photo!.fit === "cover" && (
+            <img className={s.photo} style={{ objectPosition: p.photo!.pos }} src={p.photo!.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
+          )}
+          {showPhoto && p.photo!.fit === "banner" && (
+            <img
+              className={s.photoBanner}
+              style={{ left: `${p.photo!.crop?.[0] ?? -95}%`, top: `${p.photo!.crop?.[1] ?? -6}%`, width: `${p.photo!.crop?.[2] ?? 290}%` }}
+              src={p.photo!.src}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              onError={() => setPhotoFailed(true)}
+            />
           )}
           <div className={s.artFade} />
           <div className={s.rating}>
@@ -54,6 +70,11 @@ export function GamingCard(p: GamingCardProps) {
           </div>
           <div className={s.gem} title={TIER_LABEL[p.tier]} />
           <div className={s.plate}>
+            {p.logo ? (
+              <div className={s.logo} style={{ backgroundImage: `url(${p.logo})` }} role="img" aria-label={p.gameName ?? p.code} />
+            ) : p.gameName ? (
+              <div className={s.logoText}>{p.gameName}</div>
+            ) : null}
             <div className={s.character}>{p.character}</div>
             <div className={s.title}>{p.title}</div>
             <div className={s.divider} />
@@ -96,7 +117,9 @@ export function questCardProps(game: Game, quest: Game["quests"][number], power:
     code: game.code,
     genre: game.genre,
     seed: quest.reward.characterId,
-    photo: CHARACTER_PHOTOS[quest.reward.characterId],
+    photo: quest.reward.photo,
+    logo: game.banner,
+    gameName: game.name,
     power,
     footer: quest.title,
   };

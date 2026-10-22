@@ -13,7 +13,7 @@ import * as s from "./pages.css";
 export function Studio() {
   const flow = useMintFlow();
   const [gameId, setGameId] = useState(GAMES[0]!.id);
-  const [character, setCharacter] = useState("");
+  const [charId, setCharId] = useState(GAMES[0]!.quests[0]!.reward.characterId);
   const [title, setTitle] = useState("");
   const [role, setRole] = useState("");
   const [tier, setTier] = useState<Tier>("gold");
@@ -22,11 +22,22 @@ export function Studio() {
   const [seed, setSeed] = useState(() => crypto.randomUUID().slice(0, 12));
   const [formError, setFormError] = useState<string | null>(null);
   const game = gameById(gameId)!;
+  // Each game's roster (unique characters), so every Studio card has a photo.
+  const roster = useMemo(() => {
+    const seen = new Map<string, (typeof game.quests)[number]["reward"]>();
+    for (const q of game.quests) if (!seen.has(q.reward.character)) seen.set(q.reward.character, q.reward);
+    return [...seen.values()];
+  }, [game]);
+  const picked = roster.find((r) => r.characterId === charId) ?? roster[0]!;
+  const character = picked.character;
 
   const card = useMemo(
     () => ({
       tier,
-      character: character.trim() || "Your hero",
+      character,
+      photo: picked.photo,
+      logo: game.banner,
+      gameName: game.name,
       title: title.trim() || "Card title",
       role: role.trim() || undefined,
       code: game.code,
@@ -35,25 +46,23 @@ export function Studio() {
       power: powerFor(tier, seed),
       footer: "Studio drop",
     }),
-    [tier, character, title, role, game, seed],
+    [tier, character, picked, title, role, game, seed],
   );
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setFormError(null);
     const to = recipient.trim();
-    if (!character.trim()) return setFormError("Give the card a character name.");
     if (!title.trim()) return setFormError("Give the card a title.");
     if (to && !isAddress(to)) return setFormError("The player's wallet address isn't valid.");
     const svg = renderCardSvg(card);
     const ok = await flow.run({
       file: svgToFile(svg, `${character}-${title}`),
-      name: `${character.trim()} · ${title.trim()}`.slice(0, 80),
-      description: encodeMeta({ game: game.name, genre: game.genre, tier, character: character.trim(), seed, lore }),
+      name: `${character} · ${title.trim()}`.slice(0, 80),
+      description: encodeMeta({ game: game.name, genre: game.genre, tier, character, characterId: picked.characterId, seed, lore }),
       giftTo: to ? (to as Address) : undefined,
     });
     if (ok) {
-      setCharacter("");
       setTitle("");
       setRole("");
       setLore("");
@@ -82,7 +91,10 @@ export function Studio() {
                 <label className={ui.label} htmlFor="st-game">
                   <Icon name="games" /> Game
                 </label>
-                <select id="st-game" className={ui.input} value={gameId} onChange={(e) => setGameId(e.target.value)}>
+                <select id="st-game" className={ui.input} value={gameId} onChange={(e) => {
+                    setGameId(e.target.value);
+                    setCharId(gameById(e.target.value)!.quests[0]!.reward.characterId);
+                  }}>
                   {GENRES.map((g) => (
                     <optgroup key={g.id} label={g.name}>
                       {GAMES.filter((x) => x.genre === g.id).map((x) => (
@@ -98,7 +110,13 @@ export function Studio() {
                 <label className={ui.label} htmlFor="st-char">
                   Character
                 </label>
-                <input id="st-char" className={ui.input} value={character} maxLength={24} onChange={(e) => setCharacter(e.target.value)} placeholder="e.g. Jinx" />
+                <select id="st-char" className={ui.input} value={picked.characterId} onChange={(e) => setCharId(e.target.value)}>
+                  {roster.map((r) => (
+                    <option key={r.characterId} value={r.characterId}>
+                      {r.character}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className={s.twoCol}>

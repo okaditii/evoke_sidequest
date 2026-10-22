@@ -1,5 +1,5 @@
 import { sameAddress, type Reward } from "../chain/rewards";
-import { CHARACTER_PHOTOS, gameByName, questById } from "../data/catalog";
+import { gameByName, photoFor, questById } from "../data/catalog";
 import { powerFor, TIER_LABEL } from "../lib/metadata";
 import { useApp } from "../state/AppState";
 import * as ui from "../styles/ui.css";
@@ -28,7 +28,9 @@ export function RewardCard({ reward, onOpen }: { reward: Reward; onOpen: (r: Rew
       code={game?.code ?? reward.meta.game.replace(/[^a-z]/gi, "").slice(0, 3).toUpperCase()}
       genre={game?.genre ?? reward.meta.genre}
       seed={reward.meta.seed ?? reward.meta.characterId ?? quest?.reward.characterId ?? `${reward.name}:${reward.id}`}
-      photo={CHARACTER_PHOTOS[reward.meta.characterId ?? quest?.reward.characterId ?? ""]}
+      photo={photoFor(reward.meta.characterId ?? quest?.reward.characterId)}
+      logo={game?.banner}
+      gameName={game?.name}
       power={powerFor(reward.meta.tier, `${reward.id}`)}
       footer={quest?.title ?? game?.name ?? reward.meta.game}
       serial={`#${reward.id.toString()}`}

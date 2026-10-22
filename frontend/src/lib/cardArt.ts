@@ -170,7 +170,8 @@ function accessory(kind: (typeof GEAR)[number], sw: number, light: string, glow:
   }
 }
 
-export function portrait(seed: string, genre?: string, power = 0): Portrait {
+/** `bare` draws only the backdrop (no silhouette), for cards that show a character photo on top. */
+export function portrait(seed: string, genre?: string, power = 0, bare = false): Portrait {
   const r = rng(seed);
   const [light, glow, deep] = pickOf(r, PALETTES);
   const pat = pickOf(r, PATTERNS);
@@ -201,7 +202,7 @@ export function portrait(seed: string, genre?: string, power = 0): Portrait {
   ${motif(genre, light)}
   <circle cx="230" cy="250" r="${170 + power * 8}" fill="url(#a-halo)"/>
   ${particles}
-  <g transform="translate(${shift} 0) rotate(${lean} 230 400)">
+  ${bare ? "" : `<g transform="translate(${shift} 0) rotate(${lean} 230 400)">
     <path d="M${230 - shoulderW} 660 C${230 - shoulderW} 470 ${230 - shoulderW / 2} 410 230 410 C${230 + shoulderW / 2} 410 ${230 + shoulderW} 470 ${230 + shoulderW} 660 Z" fill="${fill}" stroke="${light}" stroke-opacity=".55" stroke-width="3"/>
     <path d="M205 360 H255 V420 H205 Z" fill="${fill}"/>
     <ellipse cx="230" cy="275" rx="${headRx}" ry="${headRy}" fill="${fill}" stroke="${light}" stroke-opacity=".6" stroke-width="3"/>
@@ -209,13 +210,13 @@ export function portrait(seed: string, genre?: string, power = 0): Portrait {
     ${eyes(eye, light)}
     <path d="M${230 - shoulderW + 40} 520 Q230 470 ${230 + shoulderW - 40} 520" fill="none" stroke="${glow}" stroke-opacity=".7" stroke-width="4"/>
     ${accessory(extra, shoulderW, light, glow)}
-  </g>`;
+  </g>`}`;
   return { markup, accent: light };
 }
 
 /** Standalone portrait SVG (for <img>). */
-export const portraitSvg = (seed: string, genre?: string, power = 0) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${ART_W} ${ART_H}" preserveAspectRatio="xMidYMid slice">${portrait(seed, genre, power).markup}</svg>`;
+export const portraitSvg = (seed: string, genre?: string, power = 0, bare = false) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${ART_W} ${ART_H}" preserveAspectRatio="xMidYMid slice">${portrait(seed, genre, power, bare).markup}</svg>`;
 
 /** Game cover: the game's monogram over a seeded pattern, in the same palette. */
 export function coverSvg(seed: string, title: string, genre?: string): string {

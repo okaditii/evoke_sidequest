@@ -48,6 +48,32 @@ export const face = style({
 export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" });
 /** Official art: fills the card, anchored to the top so faces stay visible. */
 export const photo = style({ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 12%", display: "block" });
+/** Our own landscape banner, zoomed onto the character (left/top/width set inline per card). */
+export const photoBanner = style({ position: "absolute", height: "auto", maxWidth: "none", display: "block" });
+/** Game logo: the logo plate of our banner art, shown through a small window. */
+export const logo = style({
+  width: "46cqw",
+  height: "9.5cqw",
+  borderRadius: "1.6cqw",
+  backgroundSize: "112% auto",
+  backgroundPosition: "50% 84%",
+  backgroundRepeat: "no-repeat",
+  boxShadow: "0 0.8cqw 2.4cqw rgba(0,0,0,.5)",
+  marginBottom: "1cqw",
+});
+export const logoText = style({
+  justifySelf: "start",
+  padding: "0.6cqw 2.4cqw",
+  borderRadius: "1.6cqw",
+  background: "rgba(10,10,18,.7)",
+  border: "0.3cqw solid rgba(201,187,255,.45)",
+  fontFamily: vars.font.logo,
+  fontWeight: 700,
+  fontSize: "3.6cqw",
+  letterSpacing: "0.06em",
+  color: "#e6dcb0",
+  marginBottom: "1cqw",
+});
 export const artFade = style({
   position: "absolute",
   inset: 0,

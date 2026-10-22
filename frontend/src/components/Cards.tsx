@@ -10,9 +10,9 @@ import { GENRE_ICON, Icon } from "./Icon";
 
 const accent = (color: string) => ({ "--accent": color }) as CSSProperties;
 
-/** Generated cover: the game's code over its own pattern, in the Muse palette. */
+/** The game's own logo banner where we have one, otherwise a generated cover in the Muse palette. */
 export function GameArt({ game, className }: { game: Game; className?: string }) {
-  const src = useMemo(() => svgDataUrl(coverSvg(game.id, game.code, game.genre)), [game]);
+  const src = useMemo(() => game.banner ?? svgDataUrl(coverSvg(game.id, game.code, game.genre)), [game]);
   return <img className={className ?? s.coverImg} src={src} alt="" decoding="async" />;
 }
 

@@ -13,10 +13,13 @@ import { href } from "../state/route";
 import * as ui from "../styles/ui.css";
 import * as s from "./pages.css";
 
-/** One example card per tier for the ladder. */
+/** One example card per tier for the ladder, each from a different game where possible. */
 function ladderCards() {
+  const used = new Set<string>();
   return TIERS.map((tier: Tier) => {
-    const found = allQuests().find(({ quest }) => quest.tier === tier)!;
+    const options = allQuests().filter(({ quest }) => quest.tier === tier);
+    const found = options.find(({ game }) => !used.has(game.id)) ?? options[0]!;
+    used.add(found.game.id);
     return { tier, props: questCardProps(found.game, found.quest, powerFor(tier, found.quest.id)) };
   });
 }
