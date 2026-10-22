@@ -12,7 +12,8 @@ export interface Genre {
 /** Character photo shown on a card: a portrait cropped to fill it. */
 export interface Photo {
   src: string;
-  fit: "cover" | "banner";
+  /** cover: fills the card; fut: a head-and-shoulders cut-out placed like an Ultimate Team card. */
+  fit: "cover" | "banner" | "fut";
   /** CSS object-position. */
   pos?: string;
   crop?: [number, number, number];
@@ -78,7 +79,7 @@ const cr = (path: string, pos = "50% 20%"): Photo => wiki("clashroyale", path, p
 /** Wikimedia Commons file (game logos), resized by Commons. */
 const commons = (file: string, width = 640) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
 /** EA SPORTS FC in-game player portraits (EA ratings CDN), by EA player id. */
-const fc = (id: number): Photo => ({ src: `https://ratings-images-prod.pulse.ea.com/FC25/full/player-portraits/p${id}.png`, fit: "cover", pos: "50% 30%" });
+const fc = (id: number): Photo => ({ src: `https://ratings-images-prod.pulse.ea.com/FC25/full/player-portraits/p${id}.png`, fit: "fut" });
 
 /**
  * One row per card: [quest id, character, characterId, card title, role, tier, quest title, quest blurb,

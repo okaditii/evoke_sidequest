@@ -1,5 +1,5 @@
-import { createVar, globalStyle, keyframes, style } from "@vanilla-extract/css";
-import { foilShift, pulse, sweep, vars } from "../styles/theme.css";
+import { createVar, globalStyle, style } from "@vanilla-extract/css";
+import { vars } from "../styles/theme.css";
 
 export const frameVar = createVar();
 export const glowVar = createVar();
@@ -19,7 +19,7 @@ export const root = style({
   textAlign: "left",
   color: vars.color.text,
   selectors: {
-    "&:hover": { filter: `drop-shadow(0 20px 30px rgba(0,0,0,.6)) drop-shadow(0 0 18px color-mix(in srgb, ${glowVar} 45%, transparent))` },
+    "&:hover": { filter: "drop-shadow(0 20px 30px rgba(0,0,0,.6))" },
   },
 });
 export const clickable = style({ cursor: "pointer", border: 0, padding: 0, background: "none", display: "block", font: "inherit" });
@@ -32,20 +32,6 @@ export const frame = style({
   background: frameVar,
   boxShadow: "inset 0 0 0 0.6cqw rgba(255,255,255,.18)",
 });
-export const frameUltra = style({ backgroundSize: "300% 300%", animation: `${foilShift} 4s linear infinite alternate` });
-/** Ultra Legendary: a soft aurora halo pulsing behind the card. */
-export const aura = style({
-  position: "absolute",
-  inset: "-3%",
-  borderRadius: "9cqw",
-  background: "conic-gradient(from 0deg, #6e45e2, #ff5fb8, #ffd36b, #88d3ce, #5aa8ff, #6e45e2)",
-  filter: "blur(5cqw)",
-  opacity: 0.55,
-  animation: `${pulse} 3s ease-in-out infinite`,
-  zIndex: -1,
-});
-/** Base cards are matte: the art is a little washed out. */
-export const faceBase = style({ filter: "saturate(.55) brightness(.92)" });
 
 export const face = style({
   position: "relative",
@@ -57,9 +43,14 @@ export const face = style({
   isolation: "isolate",
 });
 
-export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" });
+/** Generated backdrop, in black and white; the tier tint below colours it. */
+export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", filter: "grayscale(1) brightness(.6) contrast(1.1)" });
+/** Monochrome tier tint over the backdrop (bronze, silver, gold...). Base stays grey. */
+export const tint = style({ position: "absolute", inset: 0, background: glowVar, mixBlendMode: "color", opacity: 0.85 });
 /** Official art: fills the card, anchored to the top so faces stay visible. */
 export const photo = style({ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 12%", display: "block" });
+/** Ultimate Team style: the player's cut-out portrait sits above the name plate on the card background. */
+export const photoFut = style({ position: "absolute", top: "8%", left: "22%", width: "70%", height: "auto", display: "block", filter: "drop-shadow(0 1.5cqw 2cqw rgba(0,0,0,.55))" });
 /** Our own landscape banner, zoomed onto the character (left/top/width set inline per card). */
 export const photoBanner = style({ position: "absolute", height: "auto", maxWidth: "none", display: "block" });
 /** Game logo: the logo plate of our banner art, shown through a small window. */
@@ -115,7 +106,7 @@ export const gem = style({
   transform: "rotate(45deg)",
   borderRadius: "1.2cqw",
   background: frameVar,
-  boxShadow: `0 0 3cqw color-mix(in srgb, ${glowVar} 60%, transparent), inset 0 0 0 0.6cqw rgba(255,255,255,.35)`,
+  boxShadow: "0 0.6cqw 1.6cqw rgba(0,0,0,.5), inset 0 0 0 0.6cqw rgba(255,255,255,.35)",
   zIndex: 2,
 });
 
@@ -136,7 +127,7 @@ export const tierTag = style({
   letterSpacing: "0.12em",
   textTransform: "uppercase",
   whiteSpace: "nowrap",
-  boxShadow: `0 0 2.4cqw color-mix(in srgb, ${glowVar} 45%, transparent), inset 0 0 0 0.3cqw rgba(255,255,255,.4)`,
+  boxShadow: "0 0.4cqw 1.2cqw rgba(0,0,0,.5), inset 0 0 0 0.3cqw rgba(255,255,255,.4)",
 });
 
 // ---- bottom name plate
@@ -183,50 +174,12 @@ export const glare = style({
 });
 globalStyle(`${root}:hover ${glare}`, { opacity: 1 });
 
-/** Soft light sweep (gold and above). */
-export const sheen = style({
-  position: "absolute",
-  top: 0,
-  bottom: 0,
-  left: 0,
-  width: "40%",
-  zIndex: 3,
-  pointerEvents: "none",
-  background: "linear-gradient(90deg, transparent, rgba(185,166,255,.16), rgba(136,211,206,.14), transparent)",
-  animation: `${sweep} 6s ease-in-out infinite`,
-});
 
-const twinkle = keyframes({ "0%, 100%": { opacity: 0.25 }, "50%": { opacity: 0.95 } });
-/** Platinum and above: little sparkles across the card. */
-export const sparkles = style({
-  position: "absolute",
-  inset: 0,
-  zIndex: 3,
-  pointerEvents: "none",
-  backgroundImage: [
-    "radial-gradient(circle, rgba(255,255,255,.95) 0 0.5cqw, transparent 0.9cqw)",
-    "radial-gradient(circle, rgba(255,255,255,.8) 0 0.4cqw, transparent 0.8cqw)",
-    "radial-gradient(circle, rgba(255,255,255,.9) 0 0.35cqw, transparent 0.7cqw)",
-  ].join(", "),
-  backgroundSize: "37cqw 41cqw, 29cqw 33cqw, 23cqw 27cqw",
-  backgroundPosition: "4cqw 7cqw, 17cqw 22cqw, 9cqw 14cqw",
-  mixBlendMode: "screen",
-  animation: `${twinkle} 2.6s ease-in-out infinite`,
-});
-/** Diamond and above: holographic foil that shifts with the pointer. */
-export const foil = style({
-  position: "absolute",
-  inset: 0,
-  zIndex: 3,
-  pointerEvents: "none",
-  background:
-    "repeating-linear-gradient(115deg, rgba(255,95,184,0) 0%, rgba(255,95,184,.22) 7%, rgba(255,211,107,.2) 14%, rgba(136,211,206,.22) 21%, rgba(90,168,255,.22) 28%, rgba(180,140,255,.22) 35%, rgba(255,95,184,0) 42%)",
-  backgroundSize: "250% 250%",
-  backgroundPosition: "var(--gx, 50%) var(--gy, 50%)",
-  mixBlendMode: "color-dodge",
-  opacity: 0.3,
-  transition: "opacity .3s ease",
-});
-globalStyle(`${root}:hover ${foil}`, { opacity: 0.6 });
+
+/** Engraved lines inside the frame: one for Bronze–Gold, two for Platinum–Diamond, three for Ultra. */
+const engraved = { position: "absolute", zIndex: 3, pointerEvents: "none", border: `0.35cqw solid ${inkVar}`, opacity: 0.55 } as const;
+export const line1 = style({ ...engraved, inset: "1.6cqw", borderRadius: "3cqw" });
+export const line2 = style({ ...engraved, inset: "3cqw", borderRadius: "2.4cqw", opacity: 0.35 });
+export const line3 = style({ ...engraved, inset: "0.6cqw", borderRadius: "3.6cqw", borderWidth: "0.6cqw", opacity: 0.8 });
 
 export const badge = style({ position: "absolute", top: "22cqw", right: "4.5cqw", zIndex: 4 });
