@@ -71,14 +71,19 @@ const isTier = (v: unknown): v is Tier => TIERS.includes(v as Tier);
 /** Cards minted before tiers existed used rarities; map them onto the ladder. */
 const FROM_RARITY: Record<string, Tier> = { common: "base", rare: "silver", epic: "gold", legendary: "diamond", mythic: "ultra" };
 
+/** Quests from the first catalog, now retired: their cards are shown as today's closest character. */
+const RETIRED: Record<string, Partial<RewardMeta>> = {
+  "neon-ghost-lap": { game: "Valorant", genre: "tactical", character: "Neon", characterId: "neon", quest: "val-rush", lore: "Faster than the round timer." },
+};
+
 /** Never throws: anything unparseable is treated as a legacy plain-text description. */
 export function decodeMeta(description: string): DecodedMeta {
-  const legacy: DecodedMeta = { game: "Legacy upload", tier: "bronze", character: "", lore: description, legacy: true };
+  const legacy: DecodedMeta = { game: "Legacy upload", tier: "base", character: "", lore: description, legacy: true };
   if (!description.startsWith(PREFIX)) return legacy;
   try {
     const raw = JSON.parse(description.slice(PREFIX.length)) as Record<string, unknown>;
     const tier = isTier(raw.tier) ? raw.tier : (FROM_RARITY[String(raw.rarity)] ?? "bronze");
-    return {
+    const decoded: DecodedMeta = {
       game: typeof raw.game === "string" && raw.game ? raw.game : "Unknown game",
       genre: typeof raw.genre === "string" ? raw.genre : undefined,
       tier,
@@ -89,6 +94,7 @@ export function decodeMeta(description: string): DecodedMeta {
       quest: typeof raw.quest === "string" ? raw.quest : undefined,
       legacy: false,
     };
+    return { ...decoded, ...(decoded.quest ? RETIRED[decoded.quest] : undefined) };
   } catch {
     return legacy;
   }

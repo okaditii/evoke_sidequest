@@ -119,13 +119,8 @@ export const glass = style({
 });
 
 /** The original gallery block: a darker rounded panel. */
-export const gallery = style({
-  padding: "3rem 2rem",
-  background: vars.color.bgRaised,
-  borderRadius: "16px",
-  boxShadow: "0 8px 24px rgba(0, 0, 0, 0.4)",
-  "@media": { [mobile]: { padding: "1.6rem 1rem" } },
-});
+/** Card area: cards sit straight on the page, no panel behind them. */
+export const gallery = style({ padding: "1rem 0" });
 
 /** Cards keep one width; rows are centred so a short last row never hangs on the left. */
 export const cardGrid = style({

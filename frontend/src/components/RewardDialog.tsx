@@ -105,7 +105,7 @@ export function RewardDialog({ reward, onClose }: { reward: Reward | null; onClo
             <span className={ui.tag}>Card #{reward.id.toString()}</span>
           </div>
           <h2 id="reward-title" className={s.dialogTitle}>
-            {reward.name}
+            {quest?.reward.name ?? reward.name}
           </h2>
           {reward.meta.lore && <p className={s.lore}>{reward.meta.lore}</p>}
           <dl className={s.facts}>

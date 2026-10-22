@@ -2,7 +2,7 @@ import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { useMemo, useState, type ReactNode } from "react";
 import type { Game, Photo } from "../data/catalog";
 import { portraitSvg, svgDataUrl } from "../lib/cardArt";
-import { skillsFor, TIER_LABEL, type Tier } from "../lib/metadata";
+import { skillsFor, TIER_LABEL, TIER_RANK, type Tier } from "../lib/metadata";
 import { frameGradient, TIER_LOOK } from "../lib/tiers";
 import { useTilt } from "../state/useTilt";
 import * as s from "./GamingCard.css";
@@ -38,7 +38,8 @@ export function GamingCard(p: GamingCardProps) {
   const [photoFailed, setPhotoFailed] = useState(false);
   const look = TIER_LOOK[p.tier];
   const showPhoto = !!p.photo && !photoFailed;
-  const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, 0, showPhoto)), [p.seed, p.genre, showPhoto]);
+  const rank = TIER_RANK[p.tier];
+  const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, rank, showPhoto)), [p.seed, p.genre, rank, showPhoto]);
   const style = assignInlineVars({ [s.frameVar]: frameGradient(p.tier), [s.glowVar]: look.glow, [s.inkVar]: look.ink });
   const skills = useMemo(() => skillsFor(p.genre, p.power, p.seed), [p.genre, p.power, p.seed]);
   const label = p.label ?? `${p.character}, ${TIER_LABEL[p.tier]} card, overall ${p.power}`;
@@ -48,7 +49,9 @@ export function GamingCard(p: GamingCardProps) {
       <div className={s.frame} style={{ padding: `${look.thickness}cqw` }}>
         <div className={s.face}>
           <img className={s.art} src={art} alt="" decoding="async" />
-          {p.tier !== "base" && <div className={s.tint} />}
+          {showPhoto && p.photo!.fit === "top" && (
+            <img className={s.photoTop} src={p.photo!.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
+          )}
           {showPhoto && p.photo!.fit === "fut" && (
             <img className={s.photoFut} src={p.photo!.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
           )}

@@ -43,12 +43,12 @@ export const face = style({
   isolation: "isolate",
 });
 
-/** Generated backdrop, in black and white; the tier tint below colours it. */
-export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", filter: "grayscale(1) brightness(.6) contrast(1.1)" });
-/** Monochrome tier tint over the backdrop (bronze, silver, gold...). Base stays grey. */
-export const tint = style({ position: "absolute", inset: 0, background: glowVar, mixBlendMode: "color", opacity: 0.85 });
+/** Generated backdrop: a different pattern and palette per character seed (rerolled in the Studio). */
+export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" });
 /** Official art: fills the card, anchored to the top so faces stay visible. */
 export const photo = style({ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 12%", display: "block" });
+/** Starts just under the rating row and is anchored at the top, so heads are never cut off. */
+export const photoTop = style({ position: "absolute", left: 0, top: "7%", width: "100%", height: "93%", objectFit: "cover", objectPosition: "50% 0%", display: "block" });
 /** Ultimate Team style: the player's cut-out portrait sits above the name plate on the card background. */
 export const photoFut = style({ position: "absolute", top: "8%", left: "22%", width: "70%", height: "auto", display: "block", filter: "drop-shadow(0 1.5cqw 2cqw rgba(0,0,0,.55))" });
 /** Our own landscape banner, zoomed onto the character (left/top/width set inline per card). */

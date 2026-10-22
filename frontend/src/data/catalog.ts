@@ -13,7 +13,8 @@ export interface Genre {
 export interface Photo {
   src: string;
   /** cover: fills the card; fut: a head-and-shoulders cut-out placed like an Ultimate Team card. */
-  fit: "cover" | "banner" | "fut";
+  /** top: fills the card below the rating row, anchored at the head so faces never get cut. */
+  fit: "cover" | "banner" | "fut" | "top";
   /** CSS object-position. */
   pos?: string;
   crop?: [number, number, number];
@@ -68,18 +69,16 @@ export const GENRES: Genre[] = [
 // Official art, loaded at view time from the publishers' public asset servers. It is never copied
 // into this repo or minted to IPFS; minted cards keep their generated art.
 const valo = (uuid: string): Photo => ({ src: `https://media.valorant-api.com/agents/${uuid}/fullportrait.png`, fit: "cover", pos: "50% 8%" });
-const lol = (champ: string, skin = 0): Photo => ({ src: `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champ}_${skin}.jpg`, fit: "cover", pos: "50% 10%" });
+const lol = (champ: string, skin = 0): Photo => ({ src: `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champ}_${skin}.jpg`, fit: "top" });
 const fn = (id: string): Photo => ({ src: `https://fortnite-api.com/images/cosmetics/br/${id.toLowerCase()}/featured.png`, fit: "cover", pos: "50% 20%" });
 const steam = (hash: string): Photo => ({ src: `https://community.akamai.steamstatic.com/economy/image/${hash}/512fx512f`, fit: "cover", pos: "50% 25%" });
 const dota = (hero: string): Photo => ({ src: `https://cdn.akamai.steamstatic.com/apps/dota2/videos/dota_react/heroes/renders/${hero}.png`, fit: "cover", pos: "50% 22%" });
 /** Character art from the fan wikis (Fandom image CDN). */
-const wiki = (site: string, path: string, pos = "50% 15%"): Photo => ({ src: `https://static.wikia.nocookie.net/${site}/images/${path}/revision/latest`, fit: "cover", pos });
+const wiki = (site: string, path: string, pos?: string): Photo => ({ src: `https://static.wikia.nocookie.net/${site}/images/${path}/revision/latest`, ...(pos ? { fit: "cover", pos } : { fit: "top" }) });
 /** Clash Royale 3D character renders from the Clash Royale wiki. */
-const cr = (path: string, pos = "50% 20%"): Photo => wiki("clashroyale", path, pos);
+const cr = (path: string, pos?: string): Photo => wiki("clashroyale", path, pos);
 /** Wikimedia Commons file (game logos), resized by Commons. */
 const commons = (file: string, width = 640) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=${width}`;
-/** EA SPORTS FC in-game player portraits (EA ratings CDN), by EA player id. */
-const fc = (id: number): Photo => ({ src: `https://ratings-images-prod.pulse.ea.com/FC25/full/player-portraits/p${id}.png`, fit: "fut" });
 
 /**
  * One row per card: [quest id, character, characterId, card title, role, tier, quest title, quest blurb,
@@ -246,12 +245,11 @@ export const GAMES: Game[] = [
     tagline: "The world's game. Build your Ultimate Team.",
     palette: ["#06140c", "#00e05a"],
     quests: quests([
-      ["fc-bellingham", "Bellingham", "bellingham", "Box to Box", "CAM", "silver", "Midfield Engine", "Score and assist in the same match.", ["Play Ultimate Team or Kick-Off", "Score a goal", "Assist another"], "Arrives late. Scores anyway.", fc(252371)],
-      ["fc-vini", "Vinícius Jr.", "vinicius", "Samba Skills", "LW", "gold", "Skill Moves", "Score after a four-star skill move.", ["Pick a winger", "Beat a defender with a skill move", "Score"], "Dances past defenders.", fc(238794)],
-      ["fc-haaland", "Haaland", "haaland", "Goal Machine", "ST", "platinum", "Hat-trick Hero", "Score a hat-trick in one match.", ["Play a striker", "Score three goals", "Win the match"], "Box. Shot. Goal. Repeat.", fc(239085)],
-      ["fc-mbappe", "Mbappé", "mbappe", "Rocket Pace", "ST", "diamond", "Weekend League", "Win 15 Weekend League matches.", ["Qualify for Weekend League", "Play the weekend", "Win 15"], "Gone before the defender turns.", fc(231747)],
-      ["fc-ronaldo", "Ronaldo", "ronaldo", "Siuuu", "ST", "diamond", "Big Game Player", "Score the winner in a cup final.", ["Reach a cup final", "Score late", "Win the cup"], "Built for the biggest nights.", fc(20801)],
-      ["fc-messi", "Messi", "messi", "GOAT", "RW", "ultra", "Team of the Season", "Finish Elite in Division Rivals.", ["Play Division Rivals", "Reach Elite", "Finish the season there"], "The greatest of all time.", fc(158023)],
+      ["fc-walker", "Gareth Walker", "gareth-walker", "The Rival", "ST", "base", "Trial Match", "Score in your first Journey trial.", ["Start The Journey", "Play the trial match", "Score a goal"], "Hunter's best mate and fiercest rival.", wiki("fifa", "1/11/GarethWalker.png", "50% 8%")],
+      ["fc-danny", "Danny Williams", "danny-williams", "Big Talk", "ST", "silver", "Loan Spell", "Score five goals on loan in The Journey.", ["Go out on loan", "Start five games", "Score five goals"], "Loud, flashy and always in the headlines.", wiki("fifa", "f/fa/DannyWilliams.jpg", "50% 10%")],
+      ["fc-kim", "Kim Hunter", "kim-hunter", "World Cup", "ST", "gold", "Women's World Cup", "Win the World Cup with Kim Hunter.", ["Play Kim's story", "Reach the final", "Lift the trophy"], "Alex's half-sister, a world-class finisher.", wiki("fifa", "5/54/KimHunter.jpg", "33% 25%")],
+      ["fc-hunter-rookie", "Alex Hunter", "alex-hunter-rookie", "The Rookie", "ST", "platinum", "Premier League Debut", "Score on your Premier League debut.", ["Sign your first pro contract", "Make the matchday squad", "Score on debut"], "From the trials to the Theatre of Dreams.", wiki("fifa", "9/94/AlexHunterRealMadrid.jpg", "2% 30%")],
+      ["fc-hunter", "Alex Hunter", "alex-hunter", "Champions", "ST", "ultra", "Champions", "Finish The Journey: Champions with Alex Hunter.", ["Join Real Madrid", "Win the league", "Lift the Champions trophy"], "The Journey's hero. A Hunter always finishes.", wiki("fifa", "3/37/AlexHunter.png", "50% 12%")],
     ]),
   },
   {

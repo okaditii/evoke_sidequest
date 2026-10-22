@@ -25,7 +25,7 @@ export function GameArt({ game, className }: { game: Game; className?: string })
           loading="lazy"
           decoding="async"
           referrerPolicy="no-referrer"
-          style={star.fit === "fut" ? { objectFit: "contain", objectPosition: "50% 100%" } : { objectPosition: star.pos }}
+          style={star.fit === "fut" ? { objectFit: "contain", objectPosition: "50% 100%" } : { objectPosition: star.pos ?? "50% 0%" }}
           onError={(e) => (e.currentTarget.style.display = "none")}
         />
       )}

@@ -200,7 +200,8 @@ export function portrait(seed: string, genre?: string, power = 0, bare = false):
   <rect width="${ART_W}" height="${ART_H}" fill="url(#a-bg)"/>
   ${pattern(pat, r, light)}
   ${motif(genre, light)}
-  ${bare ? "" : `<circle cx="230" cy="250" r="${170 + power * 8}" fill="url(#a-halo)"/>${particles}`}
+  <circle cx="230" cy="250" r="${170 + power * 8}" fill="url(#a-halo)"/>
+  ${particles}
   ${bare ? "" : `<g transform="translate(${shift} 0) rotate(${lean} 230 400)">
     <path d="M${230 - shoulderW} 660 C${230 - shoulderW} 470 ${230 - shoulderW / 2} 410 230 410 C${230 + shoulderW / 2} 410 ${230 + shoulderW} 470 ${230 + shoulderW} 660 Z" fill="${fill}" stroke="${light}" stroke-opacity=".55" stroke-width="3"/>
     <path d="M205 360 H255 V420 H205 Z" fill="${fill}"/>
