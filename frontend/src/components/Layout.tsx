@@ -72,7 +72,14 @@ export function Layout({ route, children }: { route: Route; children: ReactNode 
       <main>{children}</main>
 
       <footer className={s.footer}>
-        <p>© 2026 Evoke Sidequest · game reward cards on Ethereum Sepolia · not affiliated with the games or publishers shown</p>
+        <p>© 2026 Evoke Sidequest · game reward cards on Ethereum Sepolia · a free, non-commercial fan project</p>
+        <p style={{ fontSize: "12px", color: "#75758c", maxWidth: "900px", margin: "0 auto" }}>
+          Evoke Sidequest isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone
+          officially involved in producing or managing Riot Games properties. Riot Games and all associated properties
+          are trademarks or registered trademarks of Riot Games, Inc. Portions of the materials used are trademarks
+          and/or copyrighted works of Epic Games, Inc. All rights reserved by Epic. This material is not official and is
+          not endorsed by Epic. Other game names are trademarks of their respective owners.
+        </p>
         <div className={s.footerLinks}>
           <a className={s.footerLink} href={href("games")}>
             Games

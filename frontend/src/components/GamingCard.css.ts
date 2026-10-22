@@ -46,6 +46,8 @@ export const face = style({
 });
 
 export const art = style({ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block" });
+/** Official art: fills the card, anchored to the top so faces stay visible. */
+export const photo = style({ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 12%", display: "block" });
 export const artFade = style({
   position: "absolute",
   inset: 0,

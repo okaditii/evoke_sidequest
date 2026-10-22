@@ -1,6 +1,6 @@
 import { assignInlineVars } from "@vanilla-extract/dynamic";
-import { useMemo, type ReactNode } from "react";
-import type { Game } from "../data/catalog";
+import { useMemo, useState, type ReactNode } from "react";
+import { CHARACTER_PHOTOS, type Game } from "../data/catalog";
 import { portraitSvg, svgDataUrl } from "../lib/cardArt";
 import { TIER_LABEL, TIER_RANK, type Tier } from "../lib/metadata";
 import { frameGradient, TIER_LOOK } from "../lib/tiers";
@@ -16,6 +16,8 @@ export interface GamingCardProps {
   genre?: string;
   /** Seeds the generated portrait; the same seed always draws the same art. */
   seed: string;
+  /** Official art URL shown over the generated portrait (falls back to it if the image fails). */
+  photo?: string;
   power: number;
   /** Small text bottom-right, e.g. the quest name. */
   footer?: string;
@@ -29,6 +31,7 @@ export interface GamingCardProps {
 
 export function GamingCard(p: GamingCardProps) {
   const tilt = useTilt<HTMLElement>(12);
+  const [photoFailed, setPhotoFailed] = useState(false);
   const look = TIER_LOOK[p.tier];
   const rank = TIER_RANK[p.tier];
   const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, rank)), [p.seed, p.genre, rank]);
@@ -40,6 +43,9 @@ export function GamingCard(p: GamingCardProps) {
       <div className={`${s.frame} ${p.tier === "ultra" ? s.frameUltra : ""}`}>
         <div className={s.face}>
           <img className={s.art} src={art} alt="" decoding="async" />
+          {p.photo && !photoFailed && (
+            <img className={s.photo} src={p.photo} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
+          )}
           <div className={s.artFade} />
           <div className={s.rating}>
             <span className={s.power}>{p.power}</span>
@@ -90,6 +96,7 @@ export function questCardProps(game: Game, quest: Game["quests"][number], power:
     code: game.code,
     genre: game.genre,
     seed: quest.reward.characterId,
+    photo: CHARACTER_PHOTOS[quest.reward.characterId],
     power,
     footer: quest.title,
   };

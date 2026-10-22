@@ -254,3 +254,18 @@ export const gameByName = (name: string) => GAMES.find((g) => g.name.toLowerCase
 export const gamesInGenre = (id: GenreId) => GAMES.filter((g) => g.genre === id);
 export const allQuests = () => GAMES.flatMap((g) => g.quests.map((q) => ({ quest: q, game: g })));
 export const questById = (id: string) => allQuests().find((x) => x.quest.id === id);
+
+/**
+ * Official character art, loaded at view time from the publishers' public asset servers (Riot Data
+ * Dragon, valorant-api.com, fortnite-api.com). It is never copied into this repo or minted to IPFS;
+ * minted cards keep their generated art. Characters without an entry use the generated portrait.
+ */
+export const CHARACTER_PHOTOS: Record<string, string> = {
+  "jett": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/fullportrait.png",
+  "reyna": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png",
+  "sage": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/fullportrait.png",
+  "nikki": "https://fortnite-api.com/images/cosmetics/br/character_cargolying/featured.png",
+  "jonesy": "https://fortnite-api.com/images/cosmetics/br/cid_883_athena_commando_m_chonejonesy/featured.png",
+  "jinx": "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/Jinx_0.jpg",
+  "vi": "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/Vi_0.jpg",
+};
