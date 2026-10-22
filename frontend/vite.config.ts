@@ -4,5 +4,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), vanillaExtractPlugin()],
-  server: { port: 5173 },
+  // Locally, /api goes to server.js (node server.js); in production it's the serverless function in api/.
+  server: { port: 5173, proxy: { "/api": "http://localhost:5000" } },
+  preview: { proxy: { "/api": "http://localhost:5000" } },
 });

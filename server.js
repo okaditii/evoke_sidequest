@@ -15,7 +15,8 @@ app.use(cors());
 app.get('/ping', (req, res) => res.send('IPFS Server Alive'));
 
 // IPFS Upload Route
-app.post('/upload', upload.single('file'), async (req, res) => {
+// Same route as the deployed serverless function (frontend/api/upload.ts); /upload kept for older setups.
+app.post(['/upload', '/api/upload'], upload.single('file'), async (req, res) => {
   const { title, description } = req.body;
   const file = req.file;
 

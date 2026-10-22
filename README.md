@@ -26,3 +26,12 @@ You need a browser wallet (e.g. MetaMask) with some Sepolia test ETH to claim ca
 - `frontend/` – React + TypeScript site (Vite, viem, vanilla-extract)
 
 Not affiliated with the games or publishers named on the site.
+
+## Deploying (one project)
+
+Deploy only the `frontend` folder (Vite). It ships the site plus a serverless function at `/api/upload`
+(`frontend/api/upload.ts`) that pins card images to IPFS, so no separate backend is needed.
+
+- **Root directory:** `frontend` (build `npm run build`, output `dist`)
+- **Environment variables:** `PINATA_API_KEY` and `PINATA_SECRET_KEY` (server-side only; never prefix them with `VITE_`)
+- Leave `VITE_UPLOAD_API` empty. Locally, run `node server.js` and `npm run dev`; Vite proxies `/api` to it.
