@@ -1,0 +1,19 @@
+# secrets
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# dependencies and build output
+node_modules
+dist
+artifacts
+cache
+scripts
+
+# logs and OS files
+*.log
+.DS_Store
+Thumbs.db
