@@ -2,8 +2,8 @@
 
 Evoke Sidequest turns the quests you finish in your favourite games into collectible character cards you own, minted on Ethereum Sepolia.
 
-- **Cards:** six tiers (Bronze → Silver → Gold → Platinum → Diamond → Ultra Legendary). Harder tasks earn higher tiers. All card art is generated in code; no images are loaded.
-- **Games:** Valorant, BGMI, Fortnite, League of Legends, CS2, EA SPORTS FC and Mortal Kombat 11, each with its own quests.
+- **Cards:** six tiers (Bronze → Silver → Gold → Platinum → Diamond → Ultra Legendary). Harder tasks earn higher tiers. Minted card images are generated in code.
+- **Games:** Valorant, League of Legends, Fortnite, Dota 2 and CS2: 50 character cards, each with official art (loaded from the publishers' asset servers), a tier, an overall rating and six skill stats.
 - **Contract:** the existing `ArtGallery` ERC-721 at `0xCDc6E9B074F2422f2BD1EdfCC9C9813ac0E52f57` on Sepolia (unchanged). Card details are stored in the token description as `EVOKE1:{json}`.
 
 ## Run locally

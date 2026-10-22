@@ -13,7 +13,7 @@ export function showcase(): GamingCardProps[] {
     const quest = game.quests.find((q) => q.id === questId)!;
     return questCardProps(game, quest, powerFor(quest.tier, quest.id));
   };
-  return [pick("valorant", "val-ace"), pick("lol", "lol-pentakill"), pick("bgmi", "bgmi-dinner")];
+  return [pick("valorant", "val-ace"), pick("lol", "lol-pentakill"), pick("fortnite", "fn-victory")];
 }
 
 /** Soft violet and teal light drifting behind the page. */

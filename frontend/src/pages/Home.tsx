@@ -55,7 +55,7 @@ export function Home({ onOpen }: { onOpen: (r: Reward) => void }) {
               Discover & Collect <span className={ui.gradientText}>Legendary Game Cards</span>
             </h1>
             <p className={s.heroLead}>
-              Finish sidequests in Valorant, BGMI, Fortnite, League and more. Every one drops a character card into your
+              Finish sidequests in Valorant, League, Fortnite, Dota 2 and CS2. Every one drops a character card into your
               wallet, from Bronze all the way to Ultra Legendary.
             </p>
             <div className={ui.row}>

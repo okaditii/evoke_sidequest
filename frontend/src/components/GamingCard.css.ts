@@ -77,12 +77,17 @@ export const logoText = style({
 export const artFade = style({
   position: "absolute",
   inset: 0,
-  background: "linear-gradient(180deg, rgba(10,10,18,.45) 0%, transparent 20%, transparent 50%, rgba(10,10,18,.9) 72%, #0a0a12 100%)",
+  background: "linear-gradient(180deg, rgba(10,10,18,.45) 0%, transparent 18%, transparent 40%, rgba(10,10,18,.88) 60%, #0a0a12 100%)",
 });
 
 // ---- top-left rating block
 export const rating = style({ position: "absolute", top: "5cqw", left: "6cqw", display: "grid", justifyItems: "center", lineHeight: 1, zIndex: 2 });
 export const power = style({ fontFamily: vars.font.display, fontWeight: 700, fontSize: "13cqw", letterSpacing: "-0.02em", color: inkVar, textShadow: "0 1cqw 3cqw rgba(0,0,0,.6)" });
+export const ovr = style({ fontFamily: vars.font.display, fontWeight: 600, fontSize: "3.2cqw", letterSpacing: "0.14em", color: inkVar, opacity: 0.9, marginTop: "-0.4cqw" });
+/** FUT-style skills grid: 3 columns × 2 rows. */
+export const skills = style({ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.6cqw 2cqw", margin: "0.4cqw 0 1cqw" });
+export const skill = style({ fontFamily: vars.font.display, fontWeight: 500, fontSize: "3.3cqw", letterSpacing: "0.05em", color: vars.color.textDim, whiteSpace: "nowrap" });
+export const skillValue = style({ fontWeight: 700, fontSize: "4.2cqw", color: vars.color.text, marginRight: "0.4cqw" });
 export const code = style({ fontFamily: vars.font.display, fontWeight: 600, fontSize: "4.4cqw", letterSpacing: "0.1em", marginTop: "1.2cqw", color: vars.color.text });
 export const roleText = style({ fontFamily: vars.font.display, fontWeight: 400, fontSize: "3.2cqw", letterSpacing: "0.06em", textTransform: "uppercase", color: vars.color.textDim, marginTop: "0.8cqw" });
 
@@ -112,6 +117,8 @@ export const character = style({
   overflow: "hidden",
   textOverflow: "ellipsis",
 });
+export const characterMid = style({ fontSize: "9cqw" });
+export const characterLong = style({ fontSize: "7.4cqw" });
 export const title = style({ fontFamily: vars.font.display, fontWeight: 500, fontSize: "4.2cqw", letterSpacing: "0.1em", textTransform: "uppercase", color: inkVar, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" });
 export const divider = style({ height: "0.5cqw", borderRadius: "1cqw", background: frameVar, margin: "1.2cqw 0 0.8cqw", opacity: 0.85 });
 export const stats = style({

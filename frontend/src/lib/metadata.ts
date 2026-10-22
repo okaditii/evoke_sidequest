@@ -107,3 +107,24 @@ export function powerFor(tier: Tier, seed: string): number {
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   return lo + (h % (hi - lo + 1));
 }
+
+const SKILL_LABELS: Record<string, string[]> = {
+  tactical: ["AIM", "UTL", "MOV", "IQ", "CLT", "TMW"],
+  royale: ["AIM", "BLD", "MOV", "SRV", "IQ", "CLT"],
+  moba: ["MEC", "LAN", "MAP", "TF", "FRM", "IQ"],
+};
+
+/**
+ * Six gaming skills for a card, FUT-style. Deterministic per character and scaled to the overall
+ * rating, so a card always shows the same numbers and higher tiers have higher stats.
+ */
+export function skillsFor(genre: string | undefined, power: number, seed: string): { label: string; value: number }[] {
+  const labels = SKILL_LABELS[genre ?? ""] ?? SKILL_LABELS.tactical!;
+  let h = 2166136261;
+  for (let i = 0; i < seed.length; i++) h = Math.imul(h ^ seed.charCodeAt(i), 16777619);
+  return labels.map((label, i) => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507) ^ i;
+    const spread = ((h >>> 0) % 21) - 15; // -15 .. +5 around the overall
+    return { label, value: Math.max(40, Math.min(99, power + spread)) };
+  });
+}

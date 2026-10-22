@@ -2,7 +2,7 @@ import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { useMemo, useState, type ReactNode } from "react";
 import type { Game, Photo } from "../data/catalog";
 import { portraitSvg, svgDataUrl } from "../lib/cardArt";
-import { TIER_LABEL, TIER_RANK, type Tier } from "../lib/metadata";
+import { skillsFor, TIER_LABEL, TIER_RANK, type Tier } from "../lib/metadata";
 import { frameGradient, TIER_LOOK } from "../lib/tiers";
 import { useTilt } from "../state/useTilt";
 import * as s from "./GamingCard.css";
@@ -41,7 +41,8 @@ export function GamingCard(p: GamingCardProps) {
   const showPhoto = !!p.photo && !photoFailed;
   const art = useMemo(() => svgDataUrl(portraitSvg(p.seed, p.genre, rank, showPhoto)), [p.seed, p.genre, rank, showPhoto]);
   const style = assignInlineVars({ [s.frameVar]: frameGradient(p.tier), [s.glowVar]: look.glow, [s.inkVar]: look.ink });
-  const label = p.label ?? `${p.character}, ${TIER_LABEL[p.tier]} card`;
+  const skills = useMemo(() => skillsFor(p.genre, p.power, p.seed), [p.genre, p.power, p.seed]);
+  const label = p.label ?? `${p.character}, ${TIER_LABEL[p.tier]} card, overall ${p.power}`;
 
   const body = (
     <>
@@ -65,6 +66,7 @@ export function GamingCard(p: GamingCardProps) {
           <div className={s.artFade} />
           <div className={s.rating}>
             <span className={s.power}>{p.power}</span>
+            <span className={s.ovr}>OVR</span>
             <span className={s.code}>{p.code}</span>
             {p.role && <span className={s.roleText}>{p.role}</span>}
           </div>
@@ -75,9 +77,16 @@ export function GamingCard(p: GamingCardProps) {
             ) : p.gameName ? (
               <div className={s.logoText}>{p.gameName}</div>
             ) : null}
-            <div className={s.character}>{p.character}</div>
+            <div className={`${s.character} ${p.character.length > 13 ? s.characterLong : p.character.length > 10 ? s.characterMid : ""}`}>{p.character}</div>
             <div className={s.title}>{p.title}</div>
             <div className={s.divider} />
+            <div className={s.skills}>
+              {skills.map((k) => (
+                <span key={k.label} className={s.skill}>
+                  <b className={s.skillValue}>{k.value}</b> {k.label}
+                </span>
+              ))}
+            </div>
             <div className={s.stats}>
               <span>{TIER_LABEL[p.tier]}</span>
               {p.footer && <span className={s.statCut}>{p.footer}</span>}
