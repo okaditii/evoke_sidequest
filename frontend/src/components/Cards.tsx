@@ -10,10 +10,36 @@ import { GENRE_ICON, Icon } from "./Icon";
 
 const accent = (color: string) => ({ "--accent": color }) as CSSProperties;
 
-/** The game's own logo banner where we have one, otherwise a generated cover in the Muse palette. */
+/** Generated cover in the Muse palette, with the game's top character standing in it. */
 export function GameArt({ game, className }: { game: Game; className?: string }) {
-  const src = useMemo(() => game.banner ?? svgDataUrl(coverSvg(game.id, game.code, game.genre)), [game]);
-  return <img className={className ?? s.coverImg} src={src} alt="" decoding="async" />;
+  const src = useMemo(() => svgDataUrl(coverSvg(game.id, "", game.genre)), [game]);
+  const star = [...game.quests].sort((a, b) => TIER_RANK[b.tier] - TIER_RANK[a.tier])[0]?.reward.photo;
+  return (
+    <>
+      <img className={className ?? s.coverImg} src={src} alt="" decoding="async" />
+      {star && (
+        <img
+          className={s.coverStar}
+          src={star.src}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          referrerPolicy="no-referrer"
+          style={{ objectPosition: star.pos }}
+          onError={(e) => (e.currentTarget.style.display = "none")}
+        />
+      )}
+    </>
+  );
+}
+
+/** The game's official logo in white, or its name where we have no logo. */
+export function GameLogo({ game, className }: { game: Game; className?: string }) {
+  return game.logo ? (
+    <img className={className ?? s.gameLogo} src={game.logo} alt={game.name} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+  ) : (
+    <span className={`${className ?? s.gameLogo} ${s.gameLogoText}`}>{game.name}</span>
+  );
 }
 
 export function GameTile({ game }: { game: Game }) {
@@ -25,6 +51,9 @@ export function GameTile({ game }: { game: Game }) {
     <a className={s.gameTile} href={href("game", game.id)} style={accent(genre.color)}>
       <div className={s.cover}>
         <GameArt game={game} />
+        <div className={s.logoScrim}>
+          <GameLogo game={game} />
+        </div>
         <span className={s.codeChip}>{game.code}</span>
       </div>
       <div className={s.tileBody}>

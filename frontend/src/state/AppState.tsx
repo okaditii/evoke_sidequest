@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Address } from "viem";
-import { fetchAllRewards, sameAddress, type Reward } from "../chain/rewards";
+import { BURN_ADDRESS, fetchAllRewards, sameAddress, type Reward } from "../chain/rewards";
 import { currentAccount, friendlyError, requestAccount } from "../chain/wallet";
 
 export interface Toast {
@@ -115,7 +115,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     return () => eth.removeListener("accountsChanged", onAccounts);
   }, [refresh]);
 
-  const rewards = useMemo(() => allTokens.filter((r) => !r.meta.legacy), [allTokens]);
+  const rewards = useMemo(() => allTokens.filter((r) => !r.meta.legacy && !sameAddress(r.holder, BURN_ADDRESS)), [allTokens]);
   const mine = useMemo(() => rewards.filter((r) => sameAddress(r.holder, account)), [rewards, account]);
 
   const value: AppState = {

@@ -24,6 +24,9 @@ const PATHS = {
   flag: "M5 21V4M5 4h11l-2 4 2 4H5",
   castle: "M4 21V9l2-1V5h2v2h2V5h4v2h2V5h2v3l2 1v12H4ZM10 21v-5h4v5",
   ball: "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM12 7l4 3-1.5 4.5h-5L8 10l4-3ZM12 3v4M20.5 9.5 16 10M3.5 9.5 8 10M17 19l-2.5-4.5M7 19l2.5-4.5",
+  shield: "M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3ZM9 12l2 2 4-4",
+  crown: "M3 8l4 4 5-7 5 7 4-4-2 11H5L3 8ZM5 19h14",
+  flame: "M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-3 2-4 2-6 1 1 2 2 2 3 1-2 1-5 1-7Z",
   storm: "M12 3a9 9 0 1 0 9 9M12 7a5 5 0 1 0 5 5M12 11a1 1 0 1 0 1 1",
 } as const;
 
@@ -52,4 +55,7 @@ export const GENRE_ICON: Record<string, IconName> = {
   moba: "castle",
   sports: "ball",
   fighting: "sword",
+  hero: "shield",
+  strategy: "crown",
+  action: "flame",
 };

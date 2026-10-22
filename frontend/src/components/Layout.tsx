@@ -80,6 +80,14 @@ export function Layout({ route, children }: { route: Route; children: ReactNode 
           and/or copyrighted works of Epic Games, Inc. All rights reserved by Epic. This material is not official and is
           not endorsed by Epic. Other game names are trademarks of their respective owners.
         </p>
+        <p style={{ fontSize: "12px", color: "#75758c", maxWidth: "900px", margin: "0 auto" }}>
+          Game logos:{" "}
+          <a href="https://commons.wikimedia.org/" target="_blank" rel="noreferrer" style={{ color: "inherit" }}>
+            Wikimedia Commons
+          </a>{" "}
+          (CC BY-SA). EA SPORTS FC player portraits from EA's ratings site. Mortal Kombat, God of War, Apex Legends and Overwatch art via their
+          Fandom wikis; Clash Royale renders from the Clash Royale wiki. Art is shown from its source and never minted.
+        </p>
         <div className={s.footerLinks}>
           <a className={s.footerLink} href={href("games")}>
             Games

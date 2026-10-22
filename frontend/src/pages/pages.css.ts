@@ -45,28 +45,33 @@ export const tickerItem = style({ display: "inline-flex", alignItems: "center", 
 export const tickerGem = style({ width: "11px", height: "11px", transform: "rotate(45deg)", borderRadius: "2px", flex: "none" });
 
 // ---- tier ladder
-export const ladder = style({
+/** Seven tiers in one row on desktop; smaller screens wrap with the last row centred. */
+export const ladder = style({ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.2rem" });
+export const rung = style({
+  flex: "0 0 calc((100% - 6 * 1.2rem) / 7)",
   display: "grid",
-  gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-  gap: "1.4rem",
-  "@media": { [tablet]: { gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }, [mobile]: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" } },
+  gap: "0.6rem",
+  justifyItems: "center",
+  alignContent: "start",
+  textAlign: "center",
+  "@media": { [tablet]: { flexBasis: "calc((100% - 3 * 1.2rem) / 4)" }, [mobile]: { flexBasis: "calc((100% - 1.2rem) / 2)" } },
 });
-export const rung = style({ display: "grid", gap: "0.6rem", justifyItems: "center", textAlign: "center" });
 export const rungName = style({ fontFamily: vars.font.logo, fontWeight: 700, fontSize: "1.2rem", marginTop: "0.4rem" });
 export const rungTask = style({ fontSize: "0.82rem", color: vars.color.textDim });
 
 // ---- grids
 export const genreGrid = style({
   display: "grid",
-  gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
   gap: "1.4rem",
-  "@media": { [tablet]: { gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }, [mobile]: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1rem" } },
+  "@media": { [tablet]: { gridTemplateColumns: "repeat(4, minmax(0, 1fr))" }, [mobile]: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1rem" } },
 });
-export const gameGrid = style({
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-  gap: "2.5rem",
-  "@media": { [mobile]: { gridTemplateColumns: "1fr", gap: "1.4rem" } },
+/** Three per row; a short last row is centred instead of hanging on the left. */
+export const gameGrid = style({ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "2.5rem", "@media": { [mobile]: { gap: "1.4rem" } } });
+globalStyle(`${gameGrid} > *`, {
+  flex: "0 0 calc((100% - 2 * 2.5rem) / 3)",
+  minWidth: 0,
+  "@media": { [tablet]: { flexBasis: "calc((100% - 2.5rem) / 2)" }, [mobile]: { flexBasis: "100%" } },
 });
 export const centerRow = style({ display: "flex", justifyContent: "center", marginTop: "2.5rem" });
 
@@ -225,4 +230,14 @@ export const pulled = style({
   color: vars.color.teal,
   fontSize: "11px",
   fontWeight: 600,
+});
+export const bannerLogo = style({
+  display: "block",
+  justifySelf: "start",
+  height: "clamp(42px, 7vw, 64px)",
+  width: "auto",
+  maxWidth: "min(320px, 70vw)",
+  objectFit: "contain",
+  objectPosition: "left center",
+  filter: "brightness(0) invert(1) drop-shadow(0 4px 14px rgba(0,0,0,.7))",
 });

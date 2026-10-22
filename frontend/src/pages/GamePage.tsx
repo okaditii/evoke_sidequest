@@ -52,6 +52,7 @@ export function GamePage({ gameId, onOpen }: { gameId?: string; onOpen: (r: Rewa
             <Icon name={GENRE_ICON[genre.id] ?? "games"} />
             {genre.name}
           </span>
+          {game.logo && <img className={s.bannerLogo} src={game.logo} alt="" referrerPolicy="no-referrer" />}
           <h1 className={s.bannerTitle}>{game.name}</h1>
           <p className={s.bannerTag}>{game.tagline}</p>
         </div>

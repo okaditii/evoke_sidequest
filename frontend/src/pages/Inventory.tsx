@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { explorerTx } from "../chain/contract";
 import type { Reward } from "../chain/rewards";
+import { burnReward, friendlyError } from "../chain/wallet";
 import { Icon } from "../components/Icon";
 import { RewardBrowser } from "../components/RewardBrowser";
 import { TIER_LABEL, TIERS } from "../lib/metadata";
@@ -8,8 +11,30 @@ import * as ui from "../styles/ui.css";
 import * as s from "./pages.css";
 
 export function Inventory({ onOpen }: { onOpen: (r: Reward) => void }) {
-  const { account, connect, connecting, mine, loading } = useApp();
+  const { account, connect, connecting, mine, loading, notify, refresh } = useApp();
   const games = new Set(mine.map((m) => m.meta.game)).size;
+  const [clearing, setClearing] = useState<"idle" | "confirm" | "busy">("idle");
+
+  /** Sends every card in the deck to the dead address, one wallet signature per card. */
+  async function clearDeck() {
+    if (!account) return;
+    if (clearing === "idle") return setClearing("confirm");
+    setClearing("busy");
+    let removed = 0;
+    try {
+      for (const r of mine) {
+        const hash = await burnReward(account, r.id);
+        removed++;
+        notify({ kind: "info", text: `Removed ${r.name} (${removed}/${mine.length}).`, link: { href: explorerTx(hash), label: "Receipt" } });
+      }
+      notify({ kind: "success", text: "Your deck is clear." });
+    } catch (err) {
+      notify({ kind: "error", text: friendlyError(err) });
+    } finally {
+      setClearing("idle");
+      await refresh();
+    }
+  }
 
   return (
     <section className={ui.section}>
@@ -43,6 +68,10 @@ export function Inventory({ onOpen }: { onOpen: (r: Reward) => void }) {
                 <span className={s.tallyItem}>
                   <span className={s.tallyNum}>{games}</span> games
                 </span>
+                <button className={`${ui.button.soft} ${ui.buttonSm}`} disabled={clearing === "busy"} onClick={() => void clearDeck()}>
+                  {clearing === "busy" ? <span className={ui.spinner} /> : <Icon name="close" />}
+                  {clearing === "confirm" ? `Remove all ${mine.length} cards for good?` : clearing === "busy" ? "Removing…" : "Clear deck"}
+                </button>
                 {TIERS.map((t) => {
                   const n = mine.filter((m) => m.meta.tier === t).length;
                   return n ? (

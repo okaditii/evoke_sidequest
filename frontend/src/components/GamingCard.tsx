@@ -18,9 +18,9 @@ export interface GamingCardProps {
   seed: string;
   /** Character photo shown over the generated backdrop (falls back to the drawn portrait if it fails). */
   photo?: Photo;
-  /** Our own game banner, whose logo plate is shown as the card's game logo. */
+  /** Official game logo (shown white). */
   logo?: string;
-  /** Game name, used as a text logo when there's no banner. */
+  /** Game name, used as a text logo when there's no logo image. */
   gameName?: string;
   power: number;
   /** Small text bottom-right, e.g. the quest name. */
@@ -46,8 +46,9 @@ export function GamingCard(p: GamingCardProps) {
 
   const body = (
     <>
-      <div className={`${s.frame} ${p.tier === "ultra" ? s.frameUltra : ""}`}>
-        <div className={s.face}>
+      {p.tier === "ultra" && <div className={s.aura} aria-hidden="true" />}
+      <div className={`${s.frame} ${p.tier === "ultra" ? s.frameUltra : ""}`} style={{ padding: `${look.thickness}cqw` }}>
+        <div className={`${s.face} ${p.tier === "base" ? s.faceBase : ""}`}>
           <img className={s.art} src={art} alt="" decoding="async" />
           {showPhoto && p.photo!.fit === "cover" && (
             <img className={s.photo} style={{ objectPosition: p.photo!.pos }} src={p.photo!.src} alt="" loading="lazy" decoding="async" referrerPolicy="no-referrer" onError={() => setPhotoFailed(true)} />
@@ -71,9 +72,10 @@ export function GamingCard(p: GamingCardProps) {
             {p.role && <span className={s.roleText}>{p.role}</span>}
           </div>
           <div className={s.gem} title={TIER_LABEL[p.tier]} />
+          <div className={s.tierTag}>{TIER_LABEL[p.tier]}</div>
           <div className={s.plate}>
             {p.logo ? (
-              <div className={s.logo} style={{ backgroundImage: `url(${p.logo})` }} role="img" aria-label={p.gameName ?? p.code} />
+              <img className={s.logo} src={p.logo} alt={p.gameName ?? p.code} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
             ) : p.gameName ? (
               <div className={s.logoText}>{p.gameName}</div>
             ) : null}
@@ -93,7 +95,9 @@ export function GamingCard(p: GamingCardProps) {
               {p.serial && <span>{p.serial}</span>}
             </div>
           </div>
-          {rank >= 2 && <div className={s.sheen} />}
+          {rank >= 5 && <div className={s.foil} />}
+          {rank >= 4 && <div className={s.sparkles} />}
+          {rank >= 3 && <div className={s.sheen} />}
           <div className={s.glare} />
         </div>
       </div>
@@ -127,7 +131,7 @@ export function questCardProps(game: Game, quest: Game["quests"][number], power:
     genre: game.genre,
     seed: quest.reward.characterId,
     photo: quest.reward.photo,
-    logo: game.banner,
+    logo: game.logo,
     gameName: game.name,
     power,
     footer: quest.title,

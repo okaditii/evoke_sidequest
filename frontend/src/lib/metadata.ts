@@ -4,10 +4,11 @@
  * (plain descriptions) are flagged as legacy and hidden from the game pages.
  */
 
-export const TIERS = ["bronze", "silver", "gold", "platinum", "diamond", "ultra"] as const;
+export const TIERS = ["base", "bronze", "silver", "gold", "platinum", "diamond", "ultra"] as const;
 export type Tier = (typeof TIERS)[number];
 
 export const TIER_LABEL: Record<Tier, string> = {
+  base: "Base",
   bronze: "Bronze",
   silver: "Silver",
   gold: "Gold",
@@ -18,6 +19,7 @@ export const TIER_LABEL: Record<Tier, string> = {
 
 /** What kind of task earns each tier (shown on the tier ladder). */
 export const TIER_TASK: Record<Tier, string> = {
+  base: "First steps",
   bronze: "Everyday tasks",
   silver: "Daily streaks",
   gold: "Hard quests",
@@ -26,7 +28,7 @@ export const TIER_TASK: Record<Tier, string> = {
   ultra: "Once-a-season legends",
 };
 
-export const TIER_RANK: Record<Tier, number> = { bronze: 0, silver: 1, gold: 2, platinum: 3, diamond: 4, ultra: 5 };
+export const TIER_RANK: Record<Tier, number> = { base: 0, bronze: 1, silver: 2, gold: 3, platinum: 4, diamond: 5, ultra: 6 };
 
 export interface RewardMeta {
   game: string;
@@ -67,7 +69,7 @@ export interface DecodedMeta extends RewardMeta {
 
 const isTier = (v: unknown): v is Tier => TIERS.includes(v as Tier);
 /** Cards minted before tiers existed used rarities; map them onto the ladder. */
-const FROM_RARITY: Record<string, Tier> = { common: "bronze", rare: "silver", epic: "gold", legendary: "diamond", mythic: "ultra" };
+const FROM_RARITY: Record<string, Tier> = { common: "base", rare: "silver", epic: "gold", legendary: "diamond", mythic: "ultra" };
 
 /** Never throws: anything unparseable is treated as a legacy plain-text description. */
 export function decodeMeta(description: string): DecodedMeta {
@@ -95,6 +97,7 @@ export function decodeMeta(description: string): DecodedMeta {
 /** Deterministic power rating inside the tier's band, so a card always shows the same number. */
 export function powerFor(tier: Tier, seed: string): number {
   const bands: Record<Tier, [number, number]> = {
+    base: [50, 59],
     bronze: [60, 69],
     silver: [70, 79],
     gold: [80, 86],
@@ -112,6 +115,11 @@ const SKILL_LABELS: Record<string, string[]> = {
   tactical: ["AIM", "UTL", "MOV", "IQ", "CLT", "TMW"],
   royale: ["AIM", "BLD", "MOV", "SRV", "IQ", "CLT"],
   moba: ["MEC", "LAN", "MAP", "TF", "FRM", "IQ"],
+  sports: ["PAC", "SHO", "PAS", "DRI", "DEF", "PHY"],
+  fighting: ["STR", "SPD", "CMB", "DEF", "REA", "IQ"],
+  hero: ["AIM", "ULT", "MOV", "SRV", "IQ", "TMW"],
+  strategy: ["ELX", "ATK", "DEF", "SPD", "RNG", "IQ"],
+  action: ["STR", "AGI", "WEP", "DEF", "STA", "IQ"],
 };
 
 /**

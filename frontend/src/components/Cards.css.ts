@@ -88,3 +88,47 @@ export const genreIconSvg = style({ width: "26px", height: "26px" });
 export const genreName = style({ fontSize: "1.1rem" });
 export const genreMeta = style({ fontSize: "0.85rem", color: vars.color.textDim });
 export const genreCount = style({ fontSize: "0.8rem", color: vars.color.teal, fontWeight: 500 });
+
+// ---- official game logo over the cover
+export const logoScrim = style({
+  position: "absolute",
+  inset: 0,
+  display: "grid",
+  placeItems: "center start",
+  padding: "1rem 1.4rem",
+  background: "linear-gradient(90deg, rgba(10,10,18,.75) 0%, rgba(10,10,18,.35) 50%, transparent 75%)",
+  pointerEvents: "none",
+});
+export const gameLogo = style({
+  display: "block",
+  maxWidth: "52%",
+  maxHeight: "42%",
+  width: "auto",
+  height: "auto",
+  objectFit: "contain",
+  filter: "brightness(0) invert(1) drop-shadow(0 4px 14px rgba(0,0,0,.7))",
+});
+export const gameLogoText = style({
+  maxHeight: "none",
+  fontFamily: vars.font.logo,
+  fontWeight: 700,
+  fontSize: "clamp(1.5rem, 3.4vw, 2.2rem)",
+  textAlign: "center",
+  color: "#fff",
+  filter: "none",
+  textShadow: "0 4px 18px rgba(0,0,0,.7)",
+});
+
+/** The game's top character, standing on the right of the cover and fading into it. */
+export const coverStar = style({
+  position: "absolute",
+  top: 0,
+  right: 0,
+  width: "58%",
+  height: "100%",
+  objectFit: "cover",
+  maskImage: "linear-gradient(90deg, transparent 0%, #000 35%)",
+  WebkitMaskImage: "linear-gradient(90deg, transparent 0%, #000 35%)",
+  transition: "transform .5s ease",
+  selectors: { [`${gameTile}:hover &`]: { transform: "scale(1.05)" } },
+});

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { isAddress, type Address } from "viem";
 import { explorerAddress, explorerToken, explorerTx } from "../chain/contract";
 import { sameAddress, shortAddress, type Reward } from "../chain/rewards";
-import { friendlyError, giftReward } from "../chain/wallet";
+import { burnReward, friendlyError, giftReward } from "../chain/wallet";
 import { gameByName, genreById, questById } from "../data/catalog";
 import { gatewayUrl } from "../lib/ipfs";
 import { useApp } from "../state/AppState";
@@ -27,6 +27,7 @@ export function RewardDialog({ reward, onClose }: { reward: Reward | null; onClo
   const [to, setTo] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmBurn, setConfirmBurn] = useState(false);
 
   useEffect(() => {
     const d = ref.current;
@@ -35,6 +36,7 @@ export function RewardDialog({ reward, onClose }: { reward: Reward | null; onClo
     if (!reward && d.open) d.close();
     setTo("");
     setError(null);
+    setConfirmBurn(false);
   }, [reward]);
 
   if (!reward) return <dialog ref={ref} className={s.dialog} onClose={onClose} />;
@@ -63,6 +65,26 @@ export function RewardDialog({ reward, onClose }: { reward: Reward | null; onClo
       setError(friendlyError(err));
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function burn() {
+    if (!account || !reward) return;
+    if (!confirmBurn) return setConfirmBurn(true);
+    setBusy(true);
+    setError(null);
+    try {
+      const hash = await burnReward(account, reward.id, (h) =>
+        notify({ kind: "info", text: "Removing the card. Waiting for confirmation…", link: { href: explorerTx(h), label: "View" } }),
+      );
+      notify({ kind: "success", text: `${reward.name} was removed from your deck.`, link: { href: explorerTx(hash), label: "Receipt" } });
+      onClose();
+      await refresh();
+    } catch (err) {
+      setError(friendlyError(err));
+    } finally {
+      setBusy(false);
+      setConfirmBurn(false);
     }
   }
 
@@ -137,6 +159,10 @@ export function RewardDialog({ reward, onClose }: { reward: Reward | null; onClo
               <button className={ui.button.primary} disabled={busy || !to.trim()}>
                 {busy ? <span className={ui.spinner} /> : <Icon name="gift" />}
                 {busy ? "Sending…" : "Send gift"}
+              </button>
+              <button type="button" className={ui.button.soft} disabled={busy} onClick={() => void burn()}>
+                <Icon name="close" />
+                {confirmBurn ? "Click again to remove it for good" : "Remove from deck"}
               </button>
             </form>
           )}

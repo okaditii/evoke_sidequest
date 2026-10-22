@@ -41,6 +41,9 @@ export async function fetchAllRewards(): Promise<Reward[]> {
   return rewards.reverse();
 }
 
+/** Cards sent here are gone for good: the contract has no burn, so "removing" a card means sending it to the dead address. */
+export const BURN_ADDRESS: Address = "0x000000000000000000000000000000000000dEaD";
+
 export const sameAddress = (a?: string | null, b?: string | null) =>
   !!a && !!b && a.toLowerCase() === b.toLowerCase();
 

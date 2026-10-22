@@ -127,11 +127,18 @@ export const gallery = style({
   "@media": { [mobile]: { padding: "1.6rem 1rem" } },
 });
 
+/** Cards keep one width; rows are centred so a short last row never hangs on the left. */
 export const cardGrid = style({
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "center",
   gap: "2.5rem 2rem",
-  "@media": { [mobile]: { gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "1.4rem 0.9rem" } },
+  "@media": { [mobile]: { gap: "1.4rem 0.9rem" } },
+});
+globalStyle(`${cardGrid} > *`, {
+  flex: "0 0 230px",
+  minWidth: 0,
+  "@media": { [mobile]: { flexBasis: "calc((100% - 0.9rem) / 2)" } },
 });
 
 export const skeleton = style({

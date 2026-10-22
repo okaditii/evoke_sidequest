@@ -36,7 +36,7 @@ export function Studio() {
       tier,
       character,
       photo: picked.photo,
-      logo: game.banner,
+      logo: game.logo,
       gameName: game.name,
       title: title.trim() || "Card title",
       role: role.trim() || undefined,

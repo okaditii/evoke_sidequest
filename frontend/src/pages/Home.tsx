@@ -55,7 +55,7 @@ export function Home({ onOpen }: { onOpen: (r: Reward) => void }) {
               Discover & Collect <span className={ui.gradientText}>Legendary Game Cards</span>
             </h1>
             <p className={s.heroLead}>
-              Finish sidequests in Valorant, League, Fortnite, Dota 2 and CS2. Every one drops a character card into your
+              Finish sidequests in Valorant, League, EA SPORTS FC, Clash Royale, Mortal Kombat, God of War and more. Every one drops a character card into your
               wallet, from Bronze all the way to Ultra Legendary.
             </p>
             <div className={ui.row}>
@@ -91,7 +91,7 @@ export function Home({ onOpen }: { onOpen: (r: Reward) => void }) {
       <section className={ui.section}>
         <div className={ui.container}>
           <div className={ui.sectionHeader}>
-            <span className={ui.kicker}>Six tiers</span>
+            <span className={ui.kicker}>Seven tiers</span>
             <h2 className={ui.sectionTitle}>
               <Icon name="trophy" />
               Climb the Ladder
@@ -142,7 +142,7 @@ export function Home({ onOpen }: { onOpen: (r: Reward) => void }) {
             <div className={ui.underline} />
           </div>
           <div className={s.gameGrid}>
-            {GAMES.slice(0, 3).map((g) => (
+            {GAMES.slice(0, 6).map((g) => (
               <GameTile key={g.id} game={g} />
             ))}
           </div>

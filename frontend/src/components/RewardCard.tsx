@@ -29,7 +29,7 @@ export function RewardCard({ reward, onOpen }: { reward: Reward; onOpen: (r: Rew
       genre={game?.genre ?? reward.meta.genre}
       seed={reward.meta.seed ?? reward.meta.characterId ?? quest?.reward.characterId ?? `${reward.name}:${reward.id}`}
       photo={photoFor(reward.meta.characterId ?? quest?.reward.characterId)}
-      logo={game?.banner}
+      logo={game?.logo}
       gameName={game?.name}
       power={powerFor(reward.meta.tier, `${reward.id}`)}
       footer={quest?.title ?? game?.name ?? reward.meta.game}

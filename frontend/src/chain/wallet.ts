@@ -11,6 +11,7 @@ import {
   type Hex,
 } from "viem";
 import { CHAIN, CONTRACT_ADDRESS, publicClient, rewardAbi } from "./contract";
+import { BURN_ADDRESS } from "./rewards";
 
 export function getProvider(): EIP1193Provider {
   if (!window.ethereum) {
@@ -126,6 +127,9 @@ export async function giftReward(
   if (receipt.status !== "success") throw new Error("The transfer failed on-chain.");
   return hash;
 }
+
+/** Removes a card from the deck for good by sending it to the dead address (the contract has no burn). */
+export const burnReward = (from: Address, tokenId: bigint, onSent?: (hash: Hash) => void) => giftReward(from, BURN_ADDRESS, tokenId, onSent);
 
 /** Turns wallet/RPC errors into one readable line. */
 export function friendlyError(err: unknown): string {
